@@ -1,5 +1,6 @@
 package repository;
 
+import constants.Message;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import model.Worker;
 // In-memory database. No console input/output belongs here.
 public class WorkerRepository {
     private final Map<String, Worker> workers = new LinkedHashMap<>();
-    private final List<SalaryHistory> salaryHistories = new ArrayList<>();
 
     public boolean isDuplicate(String code) {
         return workers.containsKey(code);
@@ -29,10 +29,21 @@ public class WorkerRepository {
     }
 
     public void addSalaryHistory(SalaryHistory history) {
-        salaryHistories.add(history);
+        if (history == null) {
+            throw new IllegalArgumentException(Message.EMPTY_INPUT);
+        }
+        Worker worker = history.getWorker();
+        if (findByCode(worker.getCode()) != worker) {
+            throw new IllegalArgumentException(Message.WORKER_NOT_FOUND);
+        }
+        worker.addSalaryHistory(history);
     }
 
     public List<SalaryHistory> getSalaryHistories() {
-        return new ArrayList<>(salaryHistories);
+        List<SalaryHistory> result = new ArrayList<>();
+        for (Worker worker : workers.values()) {
+            result.addAll(worker.getSalaryHistories());
+        }
+        return result;
     }
 }

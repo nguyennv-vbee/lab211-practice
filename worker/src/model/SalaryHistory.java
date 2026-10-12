@@ -2,35 +2,36 @@ package model;
 
 import constants.SalaryStatus;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-// Snapshot: previous records do not change when a worker's salary changes again.
+// Each salary change belongs to one worker and retains its salary at that time.
 public class SalaryHistory {
-    private final String code;
-    private final String name;
-    private final int age;
+    private final Worker worker;
     private final double salary;
     private final SalaryStatus status;
     private final LocalDateTime date;
 
     public SalaryHistory(Worker worker, SalaryStatus status, LocalDateTime date) {
-        this.code = worker.getCode();
-        this.name = worker.getName();
-        this.age = worker.getAge();
+        this.worker = Objects.requireNonNull(worker, "Worker must not be null.");
         this.salary = worker.getSalary();
         this.status = status;
         this.date = date;
     }
 
+    public Worker getWorker() {
+        return worker;
+    }
+
     public String getCode() {
-        return code;
+        return worker.getCode();
     }
 
     public String getName() {
-        return name;
+        return worker.getName();
     }
 
     public int getAge() {
-        return age;
+        return worker.getAge();
     }
 
     public double getSalary() {

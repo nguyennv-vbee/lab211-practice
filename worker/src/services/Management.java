@@ -89,8 +89,9 @@ public class Management {
         List<SalaryHistoryResponseDTO> result = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN);
         for (SalaryHistory record : getInfomationSalary()) {
-            result.add(new SalaryHistoryResponseDTO(record.getCode(), record.getName(),
-                    record.getAge(), record.getSalary(), record.getStatus().name(),
+            Worker worker = record.getWorker();
+            result.add(new SalaryHistoryResponseDTO(worker.getCode(), worker.getName(),
+                    worker.getAge(), record.getSalary(), record.getStatus().name(),
                     record.getDate().format(formatter)));
         }
         return result;
