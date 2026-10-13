@@ -1,35 +1,89 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package controller;
 
-import constants.Message;
-import constants.SalaryStatus;
-import dto.SalaryChangeRequestDTO;
-import dto.WorkerRequestDTO;
-import services.Management;
+import dto.WorkerDTO;
+import java.util.ArrayList;
+import model.SalaryHistory;
+import model.Worker;
+import service.WorkerService;
+import utils.Validation;
 import view.WorkerView;
 
-// Controller only coordinates DTO -> Service -> View.
+/**
+ *
+ * @author nguye
+ */
 public class WorkerController {
-    private final Management management;
-    private final WorkerView workerView;
 
-    public WorkerController() {
-        management = new Management();
-        workerView = new WorkerView();
+    private WorkerDTO inputData = new WorkerDTO();
+    private ArrayList<Worker> workerList = new ArrayList<>();
+    private WorkerView view = new WorkerView();
+    private WorkerService service = new WorkerService();
+
+    //set input data
+    public void setInputData(WorkerDTO inputForm) {
+        this.inputData = inputForm;
     }
 
-    public void addWorker(WorkerRequestDTO request) throws Exception {
-        if (management.addWorker(request)) {
-            workerView.showMessage(Message.ADD_SUCCESS);
+    //add a worker
+    public void addWorker() {
+        if (inputData == null) {
+            throw new IllegalArgumentException("Worker data must not be null.");
+        }
+        String id = Validation.checkCode(inputData.getId());
+        if (checkID(id)) {
+            throw new IllegalArgumentException("Code already exists.");
+        }
+        String name = Validation.checkString(inputData.getName());
+        int age = Validation.checkInt(inputData.getAge(), 18, 50);
+        double salary = Validation.checkDouble(inputData.getSalary());
+        String workLocation = Validation.checkString(inputData.getWorkLocation());
+        workerList.add(new Worker(id, name, age, salary, workLocation));
+    }
+
+    //check work ID
+    public boolean checkID(String code) {
+        for (Worker worker : workerList) {
+            if (worker.getId().equalsIgnoreCase(code)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //tang luong
+    public void upSalary(String code, double amount) {
+        service.setData(workerList);
+        service.upSalary(code, amount);
+    }
+
+    //giam luong
+    public void downSalary(String code, double amount) {
+        service.setData(workerList);
+        service.downSalary(code, amount);
+    }
+
+    public void displayWorker() {
+        view.displayWorker();
+    }
+
+    //hien thi salary history
+    public void displaySalaryHistory() {
+        view.displayHeader();
+        for (Worker worker : workerList) {
+            for (SalaryHistory record : worker.getSalaryHistorys()) {
+                view.setData(worker.toString() + record.toString());
+                view.salaryHistoryView();
+            }
         }
     }
 
-    public void changeSalary(SalaryStatus status, SalaryChangeRequestDTO request) {
-        if (management.changeSalary(status, request.getCode(), request.getAmount())) {
-            workerView.showMessage(Message.CHANGE_SUCCESS);
-        }
+    //hien thi menu
+    public void displayMenu() {
+        view.mainMenu();
     }
 
-    public void showSalaryHistory() {
-        workerView.showSalaryHistory(management.getSalaryHistoryResponse());
-    }
 }

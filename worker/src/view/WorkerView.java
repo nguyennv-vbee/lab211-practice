@@ -1,25 +1,50 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package view;
 
-import constants.Message;
-import dto.SalaryHistoryResponseDTO;
-import java.util.List;
+import java.util.ArrayList;
+import model.Worker;
 
+
+
+/**
+ *
+ * @author nguye
+ */
 public class WorkerView {
-    public void showMessage(String message) {
-        System.out.println(message);
+
+    private String data ;
+    
+
+    public void mainMenu() {
+        System.out.println("======== Worker Management ========");
+        System.out.println("1. Add Worker");
+        System.out.println("2. Up salary");
+        System.out.println("3. Down salary");
+        System.out.println("4. Display Information salary");
+        System.out.println("5. Exit");
     }
 
-    public void showSalaryHistory(List<SalaryHistoryResponseDTO> histories) {
-        if (histories.isEmpty()) {
-            showMessage(Message.NO_HISTORY);
-            return;
-        }
-        System.out.println(Message.HISTORY_TITLE);
-        System.out.printf(Message.HISTORY_HEADER, "Code", "Name", "Age", "Salary", "Status", "Date");
-        System.out.println(Message.HISTORY_SEPARATOR);
-        for (SalaryHistoryResponseDTO history : histories) {
-            System.out.printf(Message.HISTORY_ROW, history.getCode(), history.getName(),
-                    history.getAge(), history.getSalary(), history.getStatus(), history.getDate());
-        }
+    public String getData() {
+        return data;
     }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+    
+    public void displayWorker(){
+       
+    }
+    public void displayHeader(){
+        System.out.println("--------------------Display Information Salary-----------------------");
+        System.out.printf("%-6s %-10s %-5s %-10s %-10s %-12s\n", "Code", "Name", "Age", "Salary", "Status", "Date");
+     
+    }
+    public void salaryHistoryView() {
+        System.out.println(data);   
+    }
+
 }

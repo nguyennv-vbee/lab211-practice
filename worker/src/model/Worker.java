@@ -1,35 +1,68 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
+import constants.SalaryStatus;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
+/**
+ *
+ * @author nguye
+ */
 public class Worker {
-    private final String code;
-    private final String name;
-    private final int age;
-    private double salary;
-    private final String workLocation;
-    private final List<SalaryHistory> salaryHistories = new ArrayList<>();
 
-    public Worker(String code, String name, int age, double salary, String workLocation) {
-        this.code = code;
+    private String id;
+    private String name;
+    private int age;
+    private double salary;
+    private String workLocation;
+    private ArrayList<SalaryHistory> salaryHistorys = new ArrayList<>();
+
+    public Worker() {
+    }
+
+    public Worker(String id, String name, int age, double salary, String workLocation) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.salary = salary;
         this.workLocation = workLocation;
+        salaryHistorys.add(new SalaryHistory(salary, SalaryStatus.NO_CHANGE, LocalDate.now()));
     }
 
-    public String getCode() {
-        return code;
+    public void addSalaryHistory(SalaryHistory history) {
+        salaryHistorys.add(history);
+    }
+
+    public ArrayList<SalaryHistory> getSalaryHistorys() {
+        return salaryHistorys;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getAge() {
         return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public double getSalary() {
@@ -44,14 +77,12 @@ public class Worker {
         return workLocation;
     }
 
-    public void addSalaryHistory(SalaryHistory history) {
-        if (history == null || history.getWorker() != this) {
-            throw new IllegalArgumentException("Salary history must belong to this worker.");
-        }
-        salaryHistories.add(history);
+    public void setWorkLocation(String workLocation) {
+        this.workLocation = workLocation;
     }
 
-    public List<SalaryHistory> getSalaryHistories() {
-        return Collections.unmodifiableList(salaryHistories);
+    @Override
+    public String toString() {
+        return String.format("%-6s %-10s %-5d", id, name, age);
     }
 }

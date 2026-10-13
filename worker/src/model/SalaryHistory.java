@@ -1,48 +1,61 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
 import constants.SalaryStatus;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-// Each salary change belongs to one worker and retains its salary at that time.
+/**
+ *
+ * @author nguye
+ */
 public class SalaryHistory {
-    private final Worker worker;
-    private final double salary;
-    private final SalaryStatus status;
-    private final LocalDateTime date;
 
-    public SalaryHistory(Worker worker, SalaryStatus status, LocalDateTime date) {
-        this.worker = Objects.requireNonNull(worker, "Worker must not be null.");
-        this.salary = worker.getSalary();
+    private double salaryChange;
+    private SalaryStatus status;
+    private LocalDate date;
+
+    public SalaryHistory() {
+    }
+
+    public SalaryHistory(double salary, SalaryStatus status, LocalDate date) {
+        this.salaryChange = salary;
         this.status = status;
         this.date = date;
     }
 
-    public Worker getWorker() {
-        return worker;
-    }
-
-    public String getCode() {
-        return worker.getCode();
-    }
-
-    public String getName() {
-        return worker.getName();
-    }
-
-    public int getAge() {
-        return worker.getAge();
-    }
-
-    public double getSalary() {
-        return salary;
+    @Override
+    public String toString() {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format(" %-10.2f %-10s %-12s",
+                salaryChange, status, date.format(fmt));
     }
 
     public SalaryStatus getStatus() {
         return status;
     }
 
-    public LocalDateTime getDate() {
+    public void setStatus(SalaryStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getDate() {
         return date;
     }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public double getSalary() {
+        return salaryChange;
+    }
+
+    public void setSalary(double salary) {
+        this.salaryChange = salary;
+    }
+
 }
