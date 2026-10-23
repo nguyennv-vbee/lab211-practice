@@ -29,13 +29,13 @@ public class WorkerController {
     }
 
     //add a worker
-    public void addWorker() {
+    public void addWorker() throws Exception {
         if (inputData == null) {
-            throw new IllegalArgumentException("Worker data must not be null.");
+            throw new Exception("Worker data must not be null.");
         }
         String id = Validation.checkCode(inputData.getId());
         if (checkID(id)) {
-            throw new IllegalArgumentException("Code already exists.");
+            throw new Exception("Code already exists.");
         }
         String name = Validation.checkString(inputData.getName());
         int age = Validation.checkInt(inputData.getAge(), 18, 50);

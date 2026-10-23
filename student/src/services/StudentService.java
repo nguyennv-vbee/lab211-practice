@@ -23,18 +23,18 @@ public class StudentService {
         repository = new StudentRepository();
     }
 
-    public int create(StudentRequestDTO request) {
+    public int create(StudentRequestDTO request) throws Exception {
         Student student = validatedStudent(request);
         if (repository.hasEnrollment(student.getId(), student.getSemester(),
                                      student.getCourseName(), null)) {
-            throw new IllegalArgumentException(Message.DUPLICATE_ENROLLMENT);
+            throw new Exception(Message.DUPLICATE_ENROLLMENT);
         }
         ensureConsistentName(student, null);
         repository.add(student);
         return repository.size();
     }
 
-    public List<StudentResponseDTO> findAndSort(String keyword) {
+    public List<StudentResponseDTO> findAndSort(String keyword) throws Exception {
         keyword = Validation.requireText(keyword).toLowerCase();
         List<Student> matches = new ArrayList<>();
         for (Student student : repository.getAll()) {
@@ -61,19 +61,19 @@ public class StudentService {
         return response;
     }
 
-    public void updateOrDelete(StudentActionRequestDTO request) {
+    public void updateOrDelete(StudentActionRequestDTO request) throws Exception {
         if (request == null || request.getAction() == null) {
-            throw new IllegalArgumentException(Message.INVALID_ACTION);
+            throw new Exception(Message.INVALID_ACTION);
         }
         String id = Validation.requireText(request.getId());
         String semester = Validation.requireText(request.getOldSemester());
         String course = Validation.getCourse(request.getOldCourseName());
 
         if (repository.findById(id).isEmpty()) {
-            throw new IllegalArgumentException(Message.STUDENT_NOT_FOUND);
+            throw new Exception(Message.STUDENT_NOT_FOUND);
         }
         Student target = repository.findExact(id, semester, course);
-        if (target == null) throw new IllegalArgumentException(Message.RECORD_NOT_FOUND);
+        if (target == null) throw new Exception(Message.RECORD_NOT_FOUND);
 
         if (request.getAction() == Action.DELETE) {
             repository.delete(target);
@@ -83,7 +83,7 @@ public class StudentService {
         Student updated = validatedStudent(request.getUpdatedStudent());
         if (repository.hasEnrollment(updated.getId(), updated.getSemester(),
                                      updated.getCourseName(), target)) {
-            throw new IllegalArgumentException(Message.DUPLICATE_ENROLLMENT);
+            throw new Exception(Message.DUPLICATE_ENROLLMENT);
         }
         // Changing the name of an existing ID also renames its other records.
         // Moving one enrollment to a different ID only affects that enrollment.
@@ -117,8 +117,8 @@ public class StudentService {
         return new ArrayList<>(grouped.values());
     }
 
-    private Student validatedStudent(StudentRequestDTO request) {
-        if (request == null) throw new IllegalArgumentException(Message.EMPTY_INPUT);
+    private Student validatedStudent(StudentRequestDTO request) throws Exception {
+        if (request == null) throw new Exception(Message.EMPTY_INPUT);
         return new Student(
                 Validation.requireText(request.getId()),
                 Validation.requireText(request.getStudentName()),
@@ -126,7 +126,7 @@ public class StudentService {
                 Validation.getCourse(request.getCourseName()));
     }
 
-    private void ensureConsistentName(Student proposed, Student editing) {
+    private void ensureConsistentName(Student proposed, Student editing) throws Exception {
         for (Student existing : repository.findById(proposed.getId())) {
             // Name is allowed to change for this ID if we are editing one of its
             // records; StudentRepository.renameById will keep all records in sync.
@@ -134,7 +134,7 @@ public class StudentService {
                     && editing.getId().equalsIgnoreCase(proposed.getId());
             if (!editingSameId && !existing.getStudentName()
                     .equalsIgnoreCase(proposed.getStudentName())) {
-                throw new IllegalArgumentException(Message.INCONSISTENT_NAME);
+                throw new Exception(Message.INCONSISTENT_NAME);
             }
         }
     }

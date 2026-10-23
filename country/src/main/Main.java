@@ -4,7 +4,6 @@ import constants.Constants;
 import constants.Message;
 import controller.CountryController;
 import dto.CountryRequestDTO;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import utils.Validation;
 
@@ -45,33 +44,22 @@ public class Main {
                     default:
                         break;
                 }
-            } catch (NoSuchElementException e) {
-                return;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                if (!scanner.hasNextLine()) {
+                    return;
+                }
             }
         }
     }
 
-    private static String readString(Scanner scanner, String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            try {
-                return Validation.getString(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private static String readString(Scanner scanner, String prompt) throws Exception {
+        System.out.print(prompt);
+        return Validation.getString(scanner.nextLine());
     }
 
-    private static float readArea(Scanner scanner) {
-        while (true) {
-            System.out.print(Message.INPUT_AREA);
-            try {
-                return Validation.getPositiveFloat(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private static float readArea(Scanner scanner) throws Exception {
+        System.out.print(Message.INPUT_AREA);
+        return Validation.getPositiveFloat(scanner.nextLine());
     }
 }

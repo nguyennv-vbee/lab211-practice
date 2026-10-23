@@ -62,8 +62,6 @@ public class Main {
                     default:
                         break;
                 }
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 if (!scanner.hasNextLine()) {

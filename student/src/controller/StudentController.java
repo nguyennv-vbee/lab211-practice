@@ -16,18 +16,18 @@ public class StudentController {
         view = new StudentView();
     }
 
-    public int createStudent(StudentRequestDTO request) {
+    public int createStudent(StudentRequestDTO request) throws Exception {
         int count = service.create(request);
         view.showMessage(Message.CREATE_SUCCESS);
         return count;
     }
 
-    public void findAndSort(String keyword) {
+    public void findAndSort(String keyword) throws Exception {
         view.setStudentResults(service.findAndSort(keyword));
         view.displayStudents();
     }
 
-    public void updateOrDelete(StudentActionRequestDTO request) {
+    public void updateOrDelete(StudentActionRequestDTO request) throws Exception {
         service.updateOrDelete(request);
         view.showMessage(request.getAction() == Action.UPDATE
                 ? Message.UPDATE_SUCCESS : Message.DELETE_SUCCESS);

@@ -25,7 +25,7 @@ public class TaskController {
         taskView.showMessage(Message.DELETE_SUCCESS);
     }
 
-    public void showTasks() {
+    public void showTasks() throws Exception {
         taskView.showTasks(management.getTaskResponse());
     }
 }

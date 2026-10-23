@@ -6,39 +6,39 @@ public final class Validation {
     private Validation() {
     }
 
-    public static String getString(String input) {
+    public static String getString(String input) throws Exception {
         if (input == null || input.trim().isEmpty()) {
-            throw new IllegalArgumentException(Message.EMPTY_INPUT);
+            throw new Exception(Message.EMPTY_INPUT);
         }
         return input.trim();
     }
 
-    public static int getInteger(String input, int min, int max) {
+    public static int getInteger(String input, int min, int max) throws Exception {
         final int number;
         try {
             number = Integer.parseInt(getString(input));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(Message.INVALID_INTEGER);
+            throw new Exception(Message.INVALID_INTEGER);
         }
         if (number < min || number > max) {
-            throw new IllegalArgumentException(String.format(Message.INVALID_RANGE, min, max));
+            throw new Exception(String.format(Message.INVALID_RANGE, min, max));
         }
         return number;
     }
 
-    public static float getPositiveFloat(String input) {
+    public static float getPositiveFloat(String input) throws Exception {
         final float number;
         try {
             number = Float.parseFloat(getString(input));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(Message.INVALID_NUMBER);
+            throw new Exception(Message.INVALID_NUMBER);
         }
         return validateArea(number);
     }
 
-    public static float validateArea(float area) {
+    public static float validateArea(float area) throws Exception {
         if (!Float.isFinite(area) || area <= 0) {
-            throw new IllegalArgumentException(Message.INVALID_AREA);
+            throw new Exception(Message.INVALID_AREA);
         }
         return area;
     }

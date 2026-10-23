@@ -22,7 +22,7 @@ public class ManageEastAsiaCountries {
     // Adapter for Controller: convert request DTO into Model inside Service.
     public void addCountry(CountryRequestDTO request) throws Exception {
         if (request == null) {
-            throw new IllegalArgumentException(Message.EMPTY_INPUT);
+            throw new Exception(Message.EMPTY_INPUT);
         }
         addCountryInformation(new EastAsiaCountries(request.getCountryCode(),
                 request.getCountryName(), request.getTotalArea(), request.getCountryTerrain()));
@@ -31,17 +31,17 @@ public class ManageEastAsiaCountries {
     // Required by J1.S.P0052.
     public void addCountryInformation(EastAsiaCountries country) throws Exception {
         if (country == null) {
-            throw new IllegalArgumentException(Message.EMPTY_INPUT);
+            throw new Exception(Message.EMPTY_INPUT);
         }
         String code = Validation.getString(country.getCountryCode());
         String name = Validation.getString(country.getCountryName());
         float area = Validation.validateArea(country.getTotalArea());
         String terrain = Validation.getString(country.getCountryTerrain());
         if (repository.existsByCode(code)) {
-            throw new IllegalArgumentException(Message.DUPLICATE_CODE);
+            throw new Exception(Message.DUPLICATE_CODE);
         }
         if (repository.size() >= Constants.MAX_COUNTRIES) {
-            throw new IllegalArgumentException(Message.COUNTRY_LIMIT);
+            throw new Exception(Message.COUNTRY_LIMIT);
         }
         repository.add(new EastAsiaCountries(code, name, area, terrain));
     }
@@ -50,7 +50,7 @@ public class ManageEastAsiaCountries {
     public EastAsiaCountries getRecentlyEnteredInformation() throws Exception {
         EastAsiaCountries country = repository.getLast();
         if (country == null) {
-            throw new IllegalArgumentException(Message.NO_COUNTRIES);
+            throw new Exception(Message.NO_COUNTRIES);
         }
         return country;
     }

@@ -25,7 +25,7 @@ public class Management {
     // Adapter for Controller: converts a DTO into a Model inside Service.
     public int addTask(TaskRequestDTO request) throws Exception {
         if (request == null) {
-            throw new IllegalArgumentException(Message.EMPTY_INPUT);
+            throw new Exception(Message.EMPTY_INPUT);
         }
         return addTask(request.getRequirementName(), request.getAssignee(),
                 request.getReviewer(), request.getTaskTypeID(), request.getDate(),
@@ -44,7 +44,7 @@ public class Management {
         double from = Validation.getPlanTime(planFrom);
         double to = Validation.getPlanTime(planTo);
         if (from >= to) {
-            throw new IllegalArgumentException(Message.INVALID_PLAN_ORDER);
+            throw new Exception(Message.INVALID_PLAN_ORDER);
         }
 
         int id = repository.getNextId();
@@ -57,7 +57,7 @@ public class Management {
     public void deleteTask(String id) throws Exception {
         int taskId = Validation.getInteger(id, 1, Integer.MAX_VALUE);
         if (!repository.deleteTask(taskId)) {
-            throw new IllegalArgumentException(Message.TASK_NOT_FOUND);
+            throw new Exception(Message.TASK_NOT_FOUND);
         }
     }
 
@@ -69,7 +69,7 @@ public class Management {
     }
 
     // Only response DTOs leave the service for presentation.
-    public List<TaskResponseDTO> getTaskResponse() {
+    public List<TaskResponseDTO> getTaskResponse() throws Exception {
         List<TaskResponseDTO> result = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN, Locale.ENGLISH);
         for (Task task : getDataTasks()) {

@@ -22,13 +22,13 @@ public enum TaskType {
         return name;
     }
 
-    public static TaskType fromId(int id) {
+    public static TaskType fromId(int id) throws Exception {
         for (TaskType type : values()) {
             if (type.id == id) {
                 return type;
             }
         }
-        throw new IllegalArgumentException(String.format(Message.INVALID_RANGE,
+        throw new Exception(String.format(Message.INVALID_RANGE,
                 Constants.MIN_TASK_TYPE, Constants.MAX_TASK_TYPE));
     }
 }

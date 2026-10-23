@@ -18,46 +18,50 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main().run();
-    }
-
-    private void run() {
+        Main application = new Main();
         while (true) {
             System.out.println(Message.MENU);
-            int choice = inputMenuChoice();
-            switch (choice) {
-                case 1: createStudents(); break;
-                case 2: findAndSort(); break;
-                case 3: updateOrDelete(); break;
-                case 4: controller.report(); break;
-                case 5:
-                    System.out.println(Message.EXIT);
+            System.out.print(Message.INPUT_CHOICE);
+            if (!application.scanner.hasNextLine()) {
+                return;
+            }
+            try {
+                int choice = Validation.getMenuChoice(application.scanner.nextLine());
+                switch (choice) {
+                    case 1: application.createStudents(); break;
+                    case 2: application.findAndSort(); break;
+                    case 3: application.updateOrDelete(); break;
+                    case 4: application.controller.report(); break;
+                    case 5:
+                        System.out.println(Message.EXIT);
+                        return;
+                    default: break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                if (!application.scanner.hasNextLine()) {
                     return;
-                default: break;
+                }
             }
         }
     }
 
-    private void createStudents() {
+    private void createStudents() throws Exception {
         while (true) {
             StudentRequestDTO request = inputStudent(false);
-            try {
-                // One Controller call per created record (Guide.xlsx).
-                int count = controller.createStudent(request);
-                if (count >= Constants.MIN_STUDENTS && !inputYesNo()) return;
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
+            // One Controller call per created record (Guide.xlsx).
+            int count = controller.createStudent(request);
+            if (count >= Constants.MIN_STUDENTS && !inputYesNo()) return;
         }
     }
 
-    private void findAndSort() {
+    private void findAndSort() throws Exception {
         String keyword = inputText(Message.INPUT_SEARCH);
         // One Controller call for this workflow.
         controller.findAndSort(keyword);
     }
 
-    private void updateOrDelete() {
+    private void updateOrDelete() throws Exception {
         String id = inputText(Message.INPUT_ID);
         Constants.Action action = inputAction();
         // ID can appear several times (different semesters/courses).
@@ -70,15 +74,11 @@ public class Main {
         }
         StudentActionRequestDTO request = new StudentActionRequestDTO(
                 id, oldSemester, oldCourse, action, updated);
-        try {
-            // One Controller call for this workflow.
-            controller.updateOrDelete(request);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        // One Controller call for this workflow.
+        controller.updateOrDelete(request);
     }
 
-    private StudentRequestDTO inputStudent(boolean editing) {
+    private StudentRequestDTO inputStudent(boolean editing) throws Exception {
         String id = inputText(editing ? Message.INPUT_NEW_ID : Message.INPUT_ID);
         String name = inputText(editing ? Message.INPUT_NEW_NAME : Message.INPUT_NAME);
         String semester = inputText(editing ? Message.INPUT_NEW_SEMESTER : Message.INPUT_SEMESTER);
@@ -86,58 +86,23 @@ public class Main {
         return new StudentRequestDTO(id, name, semester, course);
     }
 
-    private String inputText(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            try {
-                return Validation.requireText(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private String inputText(String prompt) throws Exception {
+        System.out.print(prompt);
+        return Validation.requireText(scanner.nextLine());
     }
 
-    private String inputCourse(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            try {
-                return Validation.getCourse(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private String inputCourse(String prompt) throws Exception {
+        System.out.print(prompt);
+        return Validation.getCourse(scanner.nextLine());
     }
 
-    private int inputMenuChoice() {
-        while (true) {
-            System.out.print(Message.INPUT_CHOICE);
-            try {
-                return Validation.getMenuChoice(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private boolean inputYesNo() throws Exception {
+        System.out.print(Message.ASK_CONTINUE);
+        return Validation.getYesNo(scanner.nextLine());
     }
 
-    private boolean inputYesNo() {
-        while (true) {
-            System.out.print(Message.ASK_CONTINUE);
-            try {
-                return Validation.getYesNo(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    private Constants.Action inputAction() {
-        while (true) {
-            System.out.print(Message.INPUT_ACTION);
-            try {
-                return Validation.getAction(scanner.nextLine());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+    private Constants.Action inputAction() throws Exception {
+        System.out.print(Message.INPUT_ACTION);
+        return Validation.getAction(scanner.nextLine());
     }
 }
