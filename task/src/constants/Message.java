@@ -30,6 +30,7 @@ public final class Message {
     public static final String INVALID_PLAN_TIME = "Time must be from 8.0 to 17.5 in steps of 0.5.";
     public static final String INVALID_PLAN_ORDER = "Plan From must be less than Plan To.";
     public static final String TASK_NOT_FOUND = "Task ID does not exist.";
+    public static final String TASK_TYPE_NOT_FOUND = "Task type ID does not exist.";
     public static final String ADD_SUCCESS = "Task added successfully. ID: %d";
     public static final String DELETE_SUCCESS = "Task deleted successfully.";
     public static final String NO_TASKS = "No tasks found.";

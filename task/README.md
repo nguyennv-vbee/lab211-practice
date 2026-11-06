@@ -1,15 +1,15 @@
 # J1.S.P0071 - Task management
 
-Bài 71 sử dụng cùng cấu trúc với bài `worker`:
+Bài 71 sử dụng cấu trúc phân lớp sau:
 
 ```text
 src/
-├── constants/   Constants, Message, TaskType
+├── constants/   Constants, Message
 ├── controller/  TaskController
 ├── dto/         TaskRequestDTO, TaskResponseDTO
 ├── main/        Main
-├── model/       Task
-├── repository/  TaskRepository
+├── model/       Task, TaskType
+├── repository/  TaskRepository, TaskTypeRepository
 ├── services/    Management
 ├── utils/       Validation
 └── view/        TaskView
@@ -26,6 +26,10 @@ Các phương thức theo đề nằm trong `services.Management`:
 - `List<Task> getDataTasks()`
 
 Task Type cố định: `1 = Code`, `2 = Test`, `3 = Design`, `4 = Review`.
+`model.TaskType` là class chứa `id`, `name`, constructor và getter.
+`TaskTypeRepository` khởi tạo sẵn bốn loại, cung cấp `findById(int id)`.
+Service tra cứu qua Repository để kiểm tra loại task và lấy tên khi tạo response DTO,
+theo luồng phân lớp trong `Guide.xlsx`. `Task` vẫn lưu `taskTypeID`.
 Ngày được kiểm tra bằng `SimpleDateFormat`, định dạng `dd-MM-yyyy`.
 Giờ từ `8.0` đến `17.5`, bước `0.5`, và From phải nhỏ hơn To.
 ID bắt đầu từ 1, tăng theo task được thêm thành công gần nhất và không tái sử dụng sau khi xóa.

@@ -2,7 +2,6 @@ package services;
 
 import constants.Constants;
 import constants.Message;
-import constants.TaskType;
 import dto.TaskRequestDTO;
 import dto.TaskResponseDTO;
 import java.text.SimpleDateFormat;
@@ -12,14 +11,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import model.Task;
+import model.TaskType;
 import repository.TaskRepository;
+import repository.TaskTypeRepository;
 import utils.Validation;
 
 public class Management {
     private final TaskRepository repository;
+    private final TaskTypeRepository taskTypeRepository;
 
     public Management() {
         repository = new TaskRepository();
+        taskTypeRepository = new TaskTypeRepository();
     }
 
     // Adapter for Controller: converts a DTO into a Model inside Service.
@@ -40,6 +43,7 @@ public class Management {
         reviewer = Validation.getString(reviewer);
         int typeId = Validation.getInteger(taskTypeID,
                 Constants.MIN_TASK_TYPE, Constants.MAX_TASK_TYPE);
+        getTaskType(typeId);
         Date taskDate = Validation.getDate(date);
         double from = Validation.getPlanTime(planFrom);
         double to = Validation.getPlanTime(planTo);
@@ -74,9 +78,17 @@ public class Management {
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN, Locale.ENGLISH);
         for (Task task : getDataTasks()) {
             result.add(new TaskResponseDTO(task.getId(), task.getRequirementName(),
-                    TaskType.fromId(task.getTaskTypeID()).getName(), formatter.format(task.getDate()),
+                    getTaskType(task.getTaskTypeID()).getName(), formatter.format(task.getDate()),
                     task.getPlanTo() - task.getPlanFrom(), task.getAssignee(), task.getReviewer()));
         }
         return result;
+    }
+
+    private TaskType getTaskType(int id) throws Exception {
+        TaskType taskType = taskTypeRepository.findById(id);
+        if (taskType == null) {
+            throw new Exception(Message.TASK_TYPE_NOT_FOUND);
+        }
+        return taskType;
     }
 }
